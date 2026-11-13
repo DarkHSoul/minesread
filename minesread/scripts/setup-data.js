@@ -42,6 +42,11 @@ function install () {
   const dest = path.join(pkg, 'minecraft-data')
   fs.rmSync(path.join(dest, 'data'), { recursive: true, force: true })
   fs.cpSync(path.join(vendor, 'data'), path.join(dest, 'data'), { recursive: true })
+  // Correct the pinned 26.3 schema before generating/caching minecraft-data.
+  const protocolPath = path.join(dest, 'data', 'pc', '26.3', 'protocol.json')
+  const protocol = JSON.parse(fs.readFileSync(protocolPath, 'utf8'))
+  require('../../lib/attribute_protocol').patchAttributeProtocol(protocol)
+  fs.writeFileSync(protocolPath, JSON.stringify(protocol, null, 2) + '\n')
   execFileSync(process.execPath, [path.join(pkg, 'bin', 'generate_data.js')], { cwd: pkg, stdio: 'inherit' })
   fs.writeFileSync(path.join(pkg, 'minesread-data.json'), JSON.stringify({ repo: REPO, sha: SHA }, null, 2) + '\n')
 }

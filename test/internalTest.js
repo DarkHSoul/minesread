@@ -112,6 +112,19 @@ for (const supportedVersion of mineflayer.testedVersions) {
       else bot.on('end', () => done())
       server.close()
     })
+    if (supportedVersion === '26.3') {
+      it('loads the observation, combat and progression APIs together', async () => {
+        await bot.test.pluginsLoaded
+        for (const method of ['getEntityState', 'getEntityParts', 'entityPartAtCursor', 'getAttackStrengthScale', 'getExplosionDamageEstimate', 'getServerRecipe', 'getAdvancement', 'getItemCooldown']) {
+          assert.strictEqual(typeof bot[method], 'function', method)
+        }
+        assert.ok(bot.entityParts instanceof Map)
+        assert.ok(bot.advancements instanceof Map)
+        assert.ok(bot.serverRecipes.displays instanceof Map)
+        assert.strictEqual(bot.getServerRecipe(-1), null)
+        assert.strictEqual(bot.isAdvancementDone('unknown:advancement'), null)
+      })
+    }
     it('chat', (done) => {
       bot.once('chat', (username, message) => {
         assert.strictEqual(username, 'gary')

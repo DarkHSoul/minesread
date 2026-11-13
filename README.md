@@ -1,10 +1,11 @@
 # minesread
 
-Minecraft'ı kendi başına oynayan, scriptlerle çalışan, hedef odaklı ve temkinli bir bot.
+Minecraft sunucusuna bağlanan uygulamalar için veri okuma, olay ve eylem API'si sunan Node.js kütüphanesi. Amaç, forklandığı Mineflayer ile aynıdır.
 Bu depo bir [Mineflayer](https://github.com/PrismarineJS/mineflayer) fork'udur: Mineflayer'ın kendisi
-kökte (`lib/`, `index.js`), projeye özgü her şey `minesread/` klasöründedir.
+kökte (`lib/`, `index.js`), fork'a özgü belgeler ve test/kurulum araçları `minesread/` klasöründedir.
 
 - Proje amacı ve mimari: [minesread/docs/proje-amaci.md](minesread/docs/proje-amaci.md)
+- Envanter, sandık, üretim ve ticaret API'leri: [26.3 kapsamı ve sınırlar](minesread/docs/container-api-26.3.md)
 - Mineflayer belgeleri: [docs/README.md](docs/README.md)
 
 ## Durum
@@ -43,7 +44,21 @@ npm run minesread:probe                           # botun sunucuda neleri göreb
 
 ## Bilinen sınırlar
 
-- Savaş, lav kaçınma ve gece/canavar davranışları henüz test edilmedi (test sunucusu barışçıl).
-- Blok biyomu 26.3'te boş dönüyor.
+- Savaş ve tehlikeli ortam etkileşim API'lerinin canlı doğrulaması tamamlanmadı (önceki test sunucusu barışçıl).
+- Görüş, biyom, cooldown ve hasar API düzeltmeleri: [ayrıntılar](minesread/docs/api-26.3.md). Yerel regresyon/protokol testleri mevcut; canlı vanilla doğrulaması henüz yapılmadı.
 - minecraft-data #1346 (takım paketi sırası) dahil değil.
-- Botun beyin katmanları (gözlem, refleks, beceri, planlayıcı) henüz yazılmadı.
+- Otonom oynama ve planlayıcı bu kütüphanenin kapsamı dışındadır; kararlar API'yi kullanan uygulamaya aittir.
+
+## API doğrulama ve yerel build
+
+Kalan API katmanları, Mojang 26.3 bytecode referansları ve kesinlik sınırları:
+[26.3 API kapsamı](minesread/docs/api-kapsami-26.3.md).
+
+```bash
+npm run test:api
+npm run typecheck:api
+npm run build
+```
+
+Build, lint ve testlerden sonra `dist/` altında CommonJS dağıtım paketi (`.tgz`)
+ve SHA-256 manifesti üretir; bağımlılıklar paketlenmez ve otomatik yayın yapılmaz.
