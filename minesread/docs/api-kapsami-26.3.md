@@ -55,3 +55,9 @@ Varsayılan çıktı `dist/` altındadır. Paket yalnız kaynak, bildirim, scrip
 - Aynı dünyada yeniden doğuş yaşayan ejderha parçalarını artık kalıcı olarak emekliye ayırmaz. Dünya değişirse temizleme korunur. JAR `ClientPacketListener.handleRespawn` 47–76 aynı dimension anahtarında ClientLevel'ı korur; 79–201 farklı dünya için yeniden oluşturur. Gerçek entity eklentisiyle lifecycle regresyon testi eklendi.
 
 Bu üç düzeltmeye ilişkin testler: `attributeProtocolTest.js`, `biomePersistenceTest.js`, `multipartTargetTest.js`. API testleri uygulama girişini önceden yükleyerek (`--require ./index.js`) üretimdeki protokol bootstrap sırasını kullanır. Veri kurulumu yeniden çalıştırıldıktan sonra da testler geçer.
+
+### Direct biyom paletlerinin saklanması
+
+Sabitlenmiş chunk bağımlılığının direct palette kurucusu JSON'dan gelen bit dizisini yok sayıyordu; kayıt sonrası ID 42, 0 olabiliyordu. `biome_persistence.js`, yalnız biyom serileştirmesine uygulanan uyumluluk düzeltmesidir: direct dizinin verisini, kapasitesini ve bit genişliğini korur; yeni JSON kayıtlarında `noSizePrefix` bayrağını da saklar. Uygulama yüklenirken etkinleşir, böylece ilk biyom paketi gelmeden eski direct JSON verileri okunabilir. Bağımlılık dosyaları değiştirilmez.
+
+Regresyonlar gerçek World storage akışında `saveNow → unloadColumn → getColumn` döngüsünü iki kez çalıştırır; 7-bit ve 9-bit paletlerin 64 hücresini ve tekrar yazılan paket baytlarını karşılaştırır. Ayrı süreç testi mevcut direct JSON'un başlangıçta okunmasını doğrular. Daha önce sıfırlanarak yeniden kaydedilmiş verinin özgün kimlikleri bu düzeltmeyle geri getirilemez; eski JSON'da eksik olan paket biçimi bayrağı da tahmin edilmez.
