@@ -10,7 +10,8 @@
     "server:setup": "node scripts/server-setup.js",
     "server": "node scripts/run-server.js",
     "smoke": "node scripts/smoke.js",
-    "smoke:actions": "node scripts/smoke-actions.js"
+    "smoke:actions": "node scripts/smoke-actions.js",
+    "probe": "node scripts/probe.js"
   },
   "dependencies": {
     "mineflayer": "github:suisarbre/mineflayer#ad4af12611fd55309bb387b2b416212bffb0eddf",
