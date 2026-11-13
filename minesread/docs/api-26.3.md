@@ -29,7 +29,7 @@ Minecraft Java 26.3, protokol 777 kullanıldı. Sınıf adları açık olan resm
 
 Biyom çözümü `bot.world.getBlock`, asenkron dünya okuması, yüklü sütunların `getBlock` yöntemi ve raycast sonuçlarında da uygulanır.
 
-Güncelleme paketleri 9-bit özel doğrudan paletleri de destekler. İlk `map_chunk` yüklemesindeki bağımlılık codec’inin 8 bitten büyük özel doğrudan biyom paleti sınırı bu değişiklikte kaldırılmadı; standart 26.3 biyomları bu sınıra takılmaz.
+Güncelleme paketleri ve ilk `map_chunk` yüklemesi 9-bit özel doğrudan biyom paletlerini destekler. İlk yüklemedeki eski 8-bit sınırı [temel uyumluluk denetiminde](compatibility-audit-26.3.md) kaldırıldı.
 
 Palette okuyucusu, sabitlenmiş `prismarine-chunk` sürümünün iç `PaletteBiome` codec'ini kullanır. Bağımlılık güncellenirken bu yol ve codec testleri de kontrol edilmelidir.
 

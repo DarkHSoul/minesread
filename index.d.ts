@@ -61,6 +61,11 @@ export interface EntityDamage {
   sourcePosition: Vec3 | null
 }
 
+export type ItemComponentResolution =
+  | { known: false; present: false }
+  | { known: true; present: false }
+  | { known: true; present: true; value: unknown }
+
 export interface BotEvents {
   chat: (
     username: string,
@@ -270,6 +275,11 @@ export interface Bot extends TypedEmitter<BotEvents> {
   /** Remaining client ticks; pass a group identifier or an Item with its components. */
   getItemCooldown(item: Item | string | number | null): number
   usingHeldItem: boolean
+  /** Effective 26.3 component: explicit removals, stack patch, then Mojang defaults. */
+  getItemComponent: (item: Item | null, type: string) => ItemComponentResolution
+  getItemStackSize: (item: Item) => number
+  getItemDamage: (item: Item) => number | null | undefined
+  getItemMaxDurability: (item: Item) => number | undefined
   currentWindow: Window | null
   simpleClick: simpleClick
   tablist: Tablist
