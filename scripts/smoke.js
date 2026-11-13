@@ -21,6 +21,12 @@ bot.on('error', (e) => console.log('bot error:', e.message))
 bot.on('end', () => { ended = true })
 
 const finish = (code) => { try { bot.quit() } catch {} setTimeout(() => process.exit(code), 300) }
+let spawned = false
+bot.once('spawn', () => { spawned = true })
+// a kick or disconnect before spawn is a failure with a reason, not a 60 s timeout
+const earlyEnd = () => { if (!spawned) { console.log('FAIL  disconnected before spawn' + (kicked ? ': ' + kicked : '')); finish(1) } }
+bot.on('kicked', () => setTimeout(earlyEnd, 200))
+bot.on('end', earlyEnd)
 const watchdog = setTimeout(() => { console.log('FAIL  timed out waiting for spawn'); finish(1) }, 60000)
 
 bot.once('spawn', async () => {
