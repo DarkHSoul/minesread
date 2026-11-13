@@ -55,7 +55,7 @@ async function main () {
   } else {
     console.log('eula.txt NOT written. Read https://aka.ms/MinecraftEULA and re-run with --accept-eula to accept.')
   }
-  console.log(`start it with: npm run server   (or: <java 25> -Xmx2G -jar server/${version}/server.jar nogui)`)
+  console.log(`start it with: npm run minesread:server   (or: <java 25> -Xmx2G -jar server/${version}/server.jar nogui)`)
 }
 
 main().catch(e => { console.error(e.message); process.exit(1) })

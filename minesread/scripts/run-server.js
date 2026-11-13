@@ -7,8 +7,8 @@ const path = require('path')
 
 const version = process.argv[2] || '26.3'
 const dir = path.join(__dirname, '..', 'server', version)
-if (!fs.existsSync(path.join(dir, 'server.jar'))) { console.error('server.jar missing: run `npm run server:setup` first'); process.exit(1) }
-if (!fs.existsSync(path.join(dir, 'eula.txt'))) { console.error('eula.txt missing: accept the EULA with `npm run server:setup -- --accept-eula`'); process.exit(1) }
+if (!fs.existsSync(path.join(dir, 'server.jar'))) { console.error('server.jar missing: run `npm run minesread:server-setup` first'); process.exit(1) }
+if (!fs.existsSync(path.join(dir, 'eula.txt'))) { console.error('eula.txt missing: accept the EULA with `npm run minesread:server-setup -- --accept-eula`'); process.exit(1) }
 
 const candidates = [
   process.env.MINESREAD_JAVA,

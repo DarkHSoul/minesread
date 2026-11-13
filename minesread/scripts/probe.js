@@ -1,6 +1,6 @@
 // Probe: what can a Mineflayer client actually see on this server? Prints one line per data source.
 //   node scripts/probe.js [--host localhost] [--port 25565] [--version 26.3]
-const mineflayer = require('mineflayer')
+const mineflayer = require('../..')
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d }
 const bot = mineflayer.createBot({ host: arg('host', 'localhost'), port: Number(arg('port', 25565)), version: arg('version', '26.3'), username: 'minesread-probe', auth: 'offline' })
 const sleep = (ms) => new Promise(r => setTimeout(r, ms))

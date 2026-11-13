@@ -1,7 +1,7 @@
 // Connection smoke test: proves the 26.3 stack works against a real server.
 //   node scripts/smoke.js [--host localhost] [--port 25565] [--version 26.3] [--hold 20]
 // Exit code 0 only if every check passed.
-const mineflayer = require('mineflayer')
+const mineflayer = require('../..')
 
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d }
 const host = arg('host', 'localhost')

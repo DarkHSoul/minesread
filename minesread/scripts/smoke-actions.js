@@ -1,7 +1,7 @@
 // Action smoke test: digging, picking up, placing and pathfinding on a real server (26.3 shifted the
 // player-action ids, so these are the paths most likely to break).
 //   node scripts/smoke-actions.js [--host localhost] [--port 25565] [--version 26.3]
-const mineflayer = require('mineflayer')
+const mineflayer = require('../..')
 const { pathfinder, Movements, goals } = require('mineflayer-pathfinder')
 const { Vec3 } = require('vec3')
 

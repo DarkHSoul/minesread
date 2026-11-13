@@ -4,17 +4,17 @@
 // `data.js` from it with bin/generate_data.js. Upstream has no 26.2/26.3 data yet, so we swap that
 // folder for a pinned commit of the PR branch (PrismarineJS/minecraft-data#1345, a data-only change:
 // JSON + proto.yml, reviewed) and regenerate data.js. Re-run after every `npm install`
-// (scripts are disabled in .npmrc on purpose):  npm run setup:data
+// (scripts are disabled in .npmrc on purpose):  npm run minesread:setup-data
 const { execFileSync } = require('child_process')
 const fs = require('fs')
 const path = require('path')
 
-const REPO = 'https://github.com/suisarbre/minecraft-data.git'
+const REPO = 'https://github.com/DarkHSoul/minecraft-data.git'
 const SHA = '312f3cada17a7d9e2e1a1834fe26f17296163096'
 
-const root = path.join(__dirname, '..')
+const root = path.join(__dirname, '..') // minesread/
 const vendor = path.join(root, 'vendor', 'minecraft-data')
-const pkg = path.join(root, 'node_modules', 'minecraft-data')
+const pkg = path.join(root, '..', 'node_modules', 'minecraft-data') // repo root
 
 const git = (...args) => execFileSync('git', args, { cwd: vendor, stdio: 'pipe' }).toString().trim()
 

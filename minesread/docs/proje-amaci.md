@@ -8,15 +8,16 @@ görevi yapmaya çalışır.
 
 ## Mineflayer'ın yeri
 
-Mineflayer bu projede motor, hedef değil. Amaç Mineflayer'ı geliştirmek değil, onun üstüne
-botun beynini kurmak.
+minesread bir Mineflayer fork'udur. Mineflayer motor görevi görür ve depo kökünde durur.
+Projeye özgü her şey `minesread/` klasöründedir. Asıl iş motorun üstündeki beyin katmanıdır,
+ama fork olduğumuz için gerektiğinde motorun içini de değiştirebiliriz.
 
 - Bot, oyuna ayrı bir oyuncu olarak bağlanır. Kullanıcının karakterini sürmez. Tek oyunculu
   dünyada oynaması için dünyanın LAN'a açılması gerekir.
-- Resmî Mineflayer 26.3'ü henüz desteklemediği için birleştirilmemiş PR dalları, commit SHA'sına
-  sabitlenerek kullanılıyor (ayrıntı: README). Bu bir uyarlama. Upstream birleştirince resmî
-  sürüme dönülecek.
-- Yolda bulunan Mineflayer hataları düzeltilirse upstream'e PR olarak gönderilmesi hedeflenir.
+- Upstream Mineflayer 26.3'ü henüz desteklemediği için fork, incelenmiş PR commit'lerinin üstüne
+  kuruludur. Bağımlılıklar DarkHSoul fork'larındaki sabit commit'lere işaret eder (ayrıntı: README).
+- Upstream 26.3'ü birleştirince fork onunla eşitlenecek.
+- Motorda düzelttiğimiz hatalar upstream'e PR olarak gönderilebilir.
 
 ## Davranış ilkeleri
 

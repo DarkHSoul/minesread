@@ -4,14 +4,14 @@ const path = require('path')
 const targets = process.argv.slice(2).length ? process.argv.slice(2) : ['26.1', '26.2', '26.3']
 
 const mcData = require('minecraft-data')
-const mineflayer = require('mineflayer')
+const mineflayer = require('../..')
 const mcProto = require('minecraft-protocol')
 const read = (p) => require(path.join(p, 'package.json'))
 
-console.log('mineflayer          ', read(path.dirname(require.resolve('mineflayer/package.json'))).version)
+console.log('mineflayer          ', require('../../package.json').version + ' (this fork)')
 console.log('minecraft-protocol  ', read(path.dirname(require.resolve('minecraft-protocol/package.json'))).version)
 console.log('minecraft-data      ', read(path.dirname(require.resolve('minecraft-data/package.json'))).version)
-try { console.log('data patch          ', require('minecraft-data/minesread-data.json').sha.slice(0, 10)) } catch { console.log('data patch           none (run: npm run setup:data)') }
+try { console.log('data patch          ', require('minecraft-data/minesread-data.json').sha.slice(0, 10)) } catch { console.log('data patch           none (run: npm run minesread:setup-data)') }
 console.log('mineflayer supports ', mineflayer.supportedVersions || mineflayer.testedVersions)
 console.log('protocol supports   ', mcProto.supportedVersions && mcProto.supportedVersions.slice(-6))
 console.log()
