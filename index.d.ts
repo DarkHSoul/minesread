@@ -107,6 +107,7 @@ export interface BotEvents {
   serverRecipeRemoved: (displayId: number, entry: ServerRecipeEntry) => Promise<void> | void
   serverRecipeNotification: (entry: ServerRecipeEntry) => Promise<void> | void
   recipeBookSettings: (settings: Record<string, unknown>) => Promise<void> | void
+  recipePlacementGhost: (packet: { windowId: number; recipeDisplay?: ServerRecipeEntry['recipe']['display']; recipe?: string }) => Promise<void> | void
   advancementsUpdated: (packet: unknown) => Promise<void> | void
   advancementUpdate: (state: AdvancementState, previousCompleted: boolean | null) => Promise<void> | void
   advancementCompleted: (state: AdvancementState) => Promise<void> | void
@@ -418,6 +419,9 @@ export interface Bot extends TypedEmitter<BotEvents> {
     craftingTable?: Block
   ) => Promise<void>
 
+  /** Request placement from the server recipe book; does not guarantee placement or craft the output. */
+  requestRecipePlacement: (displayId: number, makeAll?: boolean) => void
+
   writeBook: (
     slot: number,
     pages: string[]
@@ -679,6 +683,8 @@ export interface TransferOptions {
   sourceEnd: number
   destStart: number
   destEnd: number
+  /** Additional source-stack predicate, for example merchant component requirements. */
+  itemMatcher?: (item: Item) => boolean
 }
 
 export interface creativeMethods {
@@ -831,15 +837,27 @@ export interface Enchantment {
   expected: { enchant: number, level: number }
 }
 
-export class Villager extends Window<ConditionalStorageEvents> {
+interface VillagerEvents extends ConditionalStorageEvents {
+  tradesUpdated: (trades: VillagerTrade[]) => void
+}
+
+export class Villager extends Window<VillagerEvents> {
   trades: VillagerTrade[]
+  selectedTrade: VillagerTrade | null
+  villagerLevel?: number
+  experience?: number
+  isRegularVillager?: boolean
+  canRestock?: boolean
 
   constructor ();
 
   close (): Promise<void>;
+  trade (index: string | number, count?: number): Promise<void>;
 }
 
 export interface VillagerTrade {
+  inputs: Item[]
+  outputs: Item[]
   inputItem1: Item
   outputItem: Item
   inputItem2: Item | null

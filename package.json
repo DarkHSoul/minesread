@@ -18,7 +18,7 @@
     "minesread:smoke": "node minesread/scripts/smoke.js",
     "minesread:smoke-actions": "node minesread/scripts/smoke-actions.js",
     "minesread:probe": "node minesread/scripts/probe.js",
-    "test:api": "mocha --require ./index.js test/biomeCooldownTest.js test/biomeProtocolTest.js test/cooldownProtocolTest.js test/visionDamageTest.js test/combatApiTest.js test/explosionApiTest.js test/entityObservationTest.js test/dragonPartsTest.js test/serverRecipesTest.js test/advancementsTest.js test/multipartTargetTest.js test/attributeProtocolTest.js test/biomePersistenceTest.js --reporter dot",
+    "test:api": "mocha --require ./index.js test/biomeCooldownTest.js test/biomeProtocolTest.js test/cooldownProtocolTest.js test/visionDamageTest.js test/combatApiTest.js test/explosionApiTest.js test/entityObservationTest.js test/dragonPartsTest.js test/serverRecipesTest.js test/advancementsTest.js test/multipartTargetTest.js test/attributeProtocolTest.js test/biomePersistenceTest.js test/uiInventoryTest.js test/uiCraftTest.js test/uiTradeTest.js --reporter dot",
     "test:26.3": "mocha test/internalTest.js --grep \"mineflayer_internal 26.3v\" --reporter dot --exit",
     "typecheck:api": "tsc -p tsconfig.api.json",
     "build": "node minesread/scripts/build.js"

@@ -67,11 +67,11 @@ Regresyonlar gerçek 26.3 registry ve protokol codec'iyle yerel testlerde doğru
 
 TypeScript tüketici testi `--strict --skipLibCheck --esModuleInterop` ile kontrol edilir. `skipLibCheck`, bağımlılıkların mevcut bildirim hatalarını ayırır; bütün bağımlılık bildirimlerinin hatasız olduğu iddia edilmez.
 
-## Bu değişiklikte çalıştırılan kontroller
+## İlk aşamada çalıştırılan kontroller
 
 - Yeni regresyon ve protokol testleri: 43 başarılı (`biomeCooldownTest`, `biomeProtocolTest`, `cooldownProtocolTest`, `visionDamageTest`).
 - Mevcut 26.3 iç testleri: 64 başarılı, 1 atlanan.
 - Değişen JavaScript dosyalarının Standard kontrolü başarılı.
 - Yeni API'nin TypeScript tüketici testi başarılı (`test/types/observation.ts`, strict + skipLibCheck + esModuleInterop).
-- Genel `npm run lint`, değiştirilmeyen probe/smoke scriptlerindeki mevcut 7 lint ihlalinde duruyor. Genel `tsc --noEmit`, bağımlılıkların tip bildirimlerinde hata veriyor. Bu bağımlılık hataları bu işte topluca değiştirilmedi.
+- İlk aşamadaki probe/smoke lint ihlalleri sonraki build çalışmasında düzeltildi; güncel `npm run build`, genel lint ve `typecheck:api` kontrollerini içerir. Bağımlılık tip bildirimleri `skipLibCheck` ile kapsam dışında tutulur.
 - İç test çıktısında bazı bağlantı kapatma/protokol okuma tanıları mevcut; test runner bunları başarısız test saymıyor. Sonuç canlı vanilla uyumluluğu garantisi olarak yorumlanmamalı.

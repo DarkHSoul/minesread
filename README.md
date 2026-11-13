@@ -5,6 +5,7 @@ Bu depo bir [Mineflayer](https://github.com/PrismarineJS/mineflayer) fork'udur: 
 kökte (`lib/`, `index.js`), fork'a özgü belgeler ve test/kurulum araçları `minesread/` klasöründedir.
 
 - Proje amacı ve mimari: [minesread/docs/proje-amaci.md](minesread/docs/proje-amaci.md)
+- Envanter, sandık, üretim ve ticaret API'leri: [26.3 kapsamı ve sınırlar](minesread/docs/container-api-26.3.md)
 - Mineflayer belgeleri: [docs/README.md](docs/README.md)
 
 ## Durum
