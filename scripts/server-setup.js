@@ -40,8 +40,9 @@ async function main () {
   }
 
   // Test-server settings: offline mode so the bot needs no Microsoft account, peaceful, small world.
+  // Offline mode is insecure, so the server only listens on localhost (server-ip=127.0.0.1).
   const props = [
-    'online-mode=false', 'server-port=25565', 'difficulty=peaceful', 'gamemode=survival',
+    'online-mode=false', 'server-ip=127.0.0.1', 'server-port=25565', 'difficulty=peaceful', 'gamemode=survival',
     'level-seed=minesread', 'view-distance=8', 'simulation-distance=6', 'spawn-protection=0',
     'enable-command-block=false', 'motd=minesread test server', 'max-players=4', 'allow-flight=true',
     'level-name=world'
