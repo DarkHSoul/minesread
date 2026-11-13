@@ -12,3 +12,5 @@ test/server_*
 .DS_Store
 launcher_accounts.json
 data
+!lib/data/
+!lib/data/item_components_26_3.json

@@ -31,7 +31,7 @@ Minesread bu ekranlarla oyun protokolü üzerinden etkileşir. Grafik pencereyi 
 
 Ticaret teklifleri yenilendiğinde `window.tradesUpdated` olayı yayımlanır; `villagerLevel`, `experience`, `isRegularVillager`, `canRestock` alanları sunucudan okunur. Fiyat hesabı Mojang'ın float yuvarlamasını ve stack sınırını izler. İkinci ödeme isteğe bağlıdır; iki ödeme aynı eşya grubunu kullanıyorsa stok iki kez sayılmaz. Başarısız çıktı/ödeme tüketimi başarılı işlem olarak kaydedilmez.
 
-Ticaret maliyetindeki açık bileşen koşulları eşleştirilir. Ancak ağ stack patch'inde bulunmayan varsayılan bileşenleri bağımlılık registry'si bütünüyle sunmaz. Böyle özel maliyet koşullarında yüksek seviyeli `trade` uygun eşyayı bulamayabilir; varsayılan bileşenleri tahmin ederek eşleşme iddia etmez. Düşük seviyeli slot API'si işlemi sunucuya iletmeye devam eder.
+Ticaret maliyetleri artık açık patch ve removal yanında Mojang'dan çıkarılmış 26.3 varsayılan bileşenleri de kullanır. Dinamik registry bağlantısı gerektiren bazı varsayılanlar hâlâ bilinmiyor olabilir; sınırlar [temel uyumluluk denetiminde](compatibility-audit-26.3.md) açıklanır. Düşük seviyeli slot API'si işlemi sunucuya iletmeye devam eder.
 
 Kanıt metotları: `ClientPacketListener.handleSetCursorItem` ve `handleContainerContent` imleç/slot uygulaması; `ResultSlot.onTake` üretim tüketimi ve kalanlar; `ServerGamePacketListenerImpl.handlePlaceRecipe` oturum display ID ve kilit kontrolü; `MerchantOffer.getModifiedCostCount` fiyat; `ItemCost.test` bileşen koşulları; `ServerGamePacketListenerImpl.handleSelectTrade` aktif ticaret menüsü kontrolü.
 
