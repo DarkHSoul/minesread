@@ -1,7 +1,7 @@
 {
   "name": "minesread",
   "version": "4.39.0",
-  "description": "Mineflayer fork: a rule-driven bot that plays Minecraft on its own",
+  "description": "Mineflayer fork providing Minecraft client state, events and action APIs",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
@@ -17,7 +17,11 @@
     "minesread:server": "node minesread/scripts/run-server.js",
     "minesread:smoke": "node minesread/scripts/smoke.js",
     "minesread:smoke-actions": "node minesread/scripts/smoke-actions.js",
-    "minesread:probe": "node minesread/scripts/probe.js"
+    "minesread:probe": "node minesread/scripts/probe.js",
+    "test:api": "mocha --require ./index.js test/biomeCooldownTest.js test/biomeProtocolTest.js test/cooldownProtocolTest.js test/visionDamageTest.js test/combatApiTest.js test/explosionApiTest.js test/entityObservationTest.js test/dragonPartsTest.js test/serverRecipesTest.js test/advancementsTest.js test/multipartTargetTest.js test/attributeProtocolTest.js test/biomePersistenceTest.js --reporter dot",
+    "test:26.3": "mocha test/internalTest.js --grep \"mineflayer_internal 26.3v\" --reporter dot --exit",
+    "typecheck:api": "tsc -p tsconfig.api.json",
+    "build": "node minesread/scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -44,6 +48,7 @@
     "prismarine-windows": "^2.9.0",
     "prismarine-world": "^3.6.0",
     "protodef": "^1.18.0",
+    "smart-buffer": "^4.2.0",
     "typed-emitter": "^1.0.0",
     "uuid-1345": "^1.0.2",
     "vec3": "^0.1.7"
@@ -66,5 +71,15 @@
     "minecraft-protocol": "$minecraft-protocol",
     "prismarine-chunk": "$prismarine-chunk",
     "prismarine-physics": "$prismarine-physics"
-  }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib/",
+    "minesread/scripts/",
+    "minesread/docs/",
+    "docs/",
+    "LICENSE",
+    "README.md"
+  ]
 }

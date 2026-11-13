@@ -62,7 +62,10 @@ bot.once('spawn', async () => {
 
     console.log(`holding connection for ${holdSec}s...`)
     const t0 = Date.now()
-    while (Date.now() - t0 < holdSec * 1000 && !ended && !kicked) await sleep(250)
+    while (Date.now() - t0 < holdSec * 1000) {
+      if (ended || kicked) break
+      await sleep(250)
+    }
     check(`stays connected ${holdSec}s`, !ended && !kicked, kicked || '')
   } catch (e) {
     check('no exception', false, e.stack || e.message)

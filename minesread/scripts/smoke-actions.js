@@ -13,7 +13,7 @@ const version = arg('version', '26.3')
 const results = []
 const check = (name, ok, detail = '') => { results.push({ name, ok }); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? '  ' + detail : ''}`) }
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-const withTimeout = (p, ms, what) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error(`timeout: ${what}`)), ms))])
+const withTimeout = (p, ms, what) => Promise.race([p, new Promise((resolve, reject) => setTimeout(() => reject(new Error(`timeout: ${what}`)), ms))])
 
 const bot = mineflayer.createBot({ host, port, version, username: 'minesread-act', auth: 'offline' })
 bot.loadPlugin(pathfinder)

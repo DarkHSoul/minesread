@@ -3,7 +3,7 @@
 const mineflayer = require('../..')
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d }
 const bot = mineflayer.createBot({ host: arg('host', 'localhost'), port: Number(arg('port', 25565)), version: arg('version', '26.3'), username: 'minesread-probe', auth: 'offline' })
-const sleep = (ms) => new Promise(r => setTimeout(r, ms))
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 const out = (k, v) => console.log(k.padEnd(34), typeof v === 'string' ? v : JSON.stringify(v))
 const attempt = (k, fn) => { try { out(k, fn()) } catch (e) { out(k, 'ERROR ' + e.message) } }
 
@@ -32,7 +32,7 @@ bot.once('spawn', async () => {
     return { coal_ore: count(['coal_ore', 'deepslate_coal_ore']), iron_ore: count(['iron_ore', 'deepslate_iron_ore']), water: count(['water']), lava: count(['lava']), logs: count(['oak_log', 'birch_log', 'spruce_log']) }
   })
   attempt('entities by kind (all loaded)', () => { const c = {}; for (const e of Object.values(bot.entities)) c[e.name || e.type] = (c[e.name || e.type] || 0) + 1; return c })
-  attempt('entity detail sample', () => { const e = Object.values(bot.entities).find(x => x !== bot.entity && x.type === 'animal' || x.type === 'mob'); return e && { name: e.name, pos: e.position.floored(), hp: e.health, metadata: (e.metadata || []).length + ' fields', equipment: (e.equipment || []).filter(Boolean).length } })
+  attempt('entity detail sample', () => { const e = Object.values(bot.entities).find(x => x !== bot.entity && (x.type === 'animal' || x.type === 'mob' || x.type === 'hostile')); return e && { name: e.name, pos: e.position.floored(), state: bot.getEntityState?.(e), metadata: Object.keys(e.metadata || {}).length + ' fields', equipment: (e.equipment || []).filter(Boolean).length } })
   attempt('players online / scoreboard / teams', () => ({ players: Object.keys(bot.players), scoreboards: Object.keys(bot.scoreboards || {}), teams: Object.keys(bot.teams || {}) }))
   attempt('recipes (crafting table) for planks', () => bot.recipesAll(bot.registry.itemsByName.oak_planks.id, null, true).length + ' recipes')
   attempt('registry: blocks/items/entities/biomes', () => ({ blocks: Object.keys(bot.registry.blocksByName).length, items: Object.keys(bot.registry.itemsByName).length, entities: Object.keys(bot.registry.entitiesByName).length, biomes: Object.keys(bot.registry.biomesByName || {}).length, enchantments: Object.keys(bot.registry.enchantmentsByName || {}).length, foods: Object.keys(bot.registry.foodsByName || {}).length }))

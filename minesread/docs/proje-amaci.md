@@ -1,73 +1,41 @@
 # minesread: proje amacı
 
-## Tek cümleyle
+## Amaç
 
-Minecraft'ı kendi başına oynayan, scriptlerle çalışan, hedef odaklı ve temkinli bir bot kurmak.
-Bot her run'da kendisine verilen kurallara göre oyunu bitirmeye (Ender Dragon) ya da istenen
-görevi yapmaya çalışır.
+Mineflayer ile aynı amaç doğrultusunda, Minecraft sunucusuna bağlanan istemciler için programatik veri okuma ve eylem API'si sunmak. minesread, uygulamaların ve eklentilerin kullanacağı bir Node.js kütüphanesidir.
 
-## Mineflayer'ın yeri
+Kütüphane sunucudan alınan veriyi işler, istemci durumunu tutar ve çağrılan eylemleri protokole aktarır. Hangi hedefin izleneceğine ve hangi eylemin ne zaman yapılacağına kütüphaneyi kullanan uygulama karar verir.
 
-minesread bir Mineflayer fork'udur. Mineflayer motor görevi görür ve depo kökünde durur.
-Projeye özgü her şey `minesread/` klasöründedir. Asıl iş motorun üstündeki beyin katmanıdır,
-ama fork olduğumuz için gerektiğinde motorun içini de değiştirebiliriz.
+## Kapsam
 
-- Bot, oyuna ayrı bir oyuncu olarak bağlanır. Kullanıcının karakterini sürmez. Tek oyunculu
-  dünyada oynaması için dünyanın LAN'a açılması gerekir.
-- Upstream Mineflayer 26.3'ü henüz desteklemediği için fork, incelenmiş PR commit'lerinin üstüne
-  kuruludur. Bağımlılıklar DarkHSoul fork'larındaki sabit commit'lere işaret eder (ayrıntı: README).
-- Upstream 26.3'ü birleştirince fork onunla eşitlenecek.
-- Motorda düzelttiğimiz hatalar upstream'e PR olarak gönderilebilir.
+- Bağlantı, protokol ve sürüm uyumluluğu; mevcut öncelik Minecraft Java 26.3 / protokol 777.
+- Blok, chunk, biyom, varlık, envanter, can, etkiler ve diğer sunucu verilerine erişim.
+- Veri değişikliklerini bildiren olaylar ve tutarlı istemci durumu.
+- Hareket, bakış, kazma, blok yerleştirme, saldırı, eşya kullanımı, üretim ve mevcut Mineflayer eylem API'leri.
+- Cooldown, hasar, saldırı doluluğu, isimli metadata, sunucu tarifleri ve advancement gibi yardımcı API'ler.
+- JavaScript/TypeScript sözleşmeleri, eklenti uyumluluğu, testler ve dağıtım paketi.
 
-## Davranış ilkeleri
+Otonom oynama, görev seçimi, refleks/tehlikeden kaçınma politikaları, beceri scriptleri, planlayıcı, run kuralları ve dil modeli entegrasyonu bu deponun ürün kapsamı dışındadır. Bunlar ihtiyaç duyan ayrı uygulamalar tarafından API'nin üzerinde kurulabilir. Ender Dragon'a ulaşmak veya oyunu bitirmek projenin başarı ölçütü değildir; ejderha bilgisi ve hedefleme desteği genel varlık API'sinin parçasıdır.
 
-- **Amaca göre hareket eder, kafasına göre değil.** Her eylem bir hedefe bağlıdır.
-- **Speedrunner gibi ama daha temkinli.** Hızlı ilerler, ama gereksiz risk almaz.
-- **Tehlikeden kaçınır.** Lavdan uzak durur, uçurum ve kıyı kenarında dövüşmez, canı azken
-  geri çekilir.
-- **Kurallara uyar.** Her run'ın hedefi ve sınırları bir kural dosyasından gelir.
-- **Dünyayı doğrudan okur.** Ekran görüntüsü ya da kayıt dosyası yerine canlı oyun verisini
-  kullanır (bloklar, varlıklar, envanter, can).
+## Mineflayer ile ilişki
 
-## Mimari (katmanlar)
+Bu depo bir Mineflayer fork'udur. Kütüphane kodu kökte (`lib/`, `index.js`, `index.d.ts`); fork'a özgü belgeler ve geliştirme/test araçları `minesread/` altındadır.
 
-1. **Gözlem:** botun gördüğü her şeyi tek bir dünya görüntüsüne çevirir.
-2. **Refleksler:** her tick çalışır, yapay zekâ çağrısı içermez. Lav ve düşme kaçınma, can
-   azken geri çekilme, yemek yeme.
-3. **Beceriler:** tek iş yapan scriptler (odun topla, kazma yap, demir bul ve erit, portal kur).
-   Her becerinin başarı ve başarısızlık koşulu vardır.
-4. **Planlayıcı:** becerileri hedefe göre sıralar. Bir adım başarısız olursa yedek plana geçer.
-   Ana zincir: odun → taş → demir → elmas → Nether → End → ejderha.
-5. **Kural dosyası:** run başına hedef ("oyunu bitir", "64 demir topla"), risk seviyesi ve yasaklar.
+Mevcut API davranışları ve eklenti uyumluluğu korunur. Sürüm uyarlamaları ve düzeltmeler gerektiğinde upstream'e taşınabilir. Bağımlılıkların mevcut sabit commit'leri README'de belirtilir; upstream ile eşitleme sürüm uyumluluğu doğrulanarak yapılır.
 
-Bir dil modeli sürekli döngüde yer almaz. Yalnızca bot takıldığında ya da serbest bir görev
-verildiğinde üst seviye plan için çağrılabilir.
+## Veri ve kesinlik ilkeleri
 
-## Botun görebildikleri ve göremedikleri
+- Canlı sunucu verisi, protokol kimlikleri ve registry eşlemeleri doğru işlenir.
+- Bilinmeyen/yüklenmemiş veri biliniyormuş gibi sunulmaz.
+- Gözlenen durum, hesaplanan tahmin ve eylemin sunucu tarafından doğrulanmış sonucu ayrılır.
+- Mojang JAR incelemesi protokol ve davranış doğrulaması içindir; sunucunun göndermediği dünya durumunu bildiğimiz anlamına gelmez.
+- Yaklaşık ejderha konumları ve koşullu patlama hesabı gibi sınırlamalar API sözleşmesinde açıkça belirtilir.
 
-Gerçek bir 26.3 sunucusunda `npm run probe` ile ölçüldü.
+## Başarı ölçütleri ve sıradaki işler
 
-**Görür:** kendi durumu (konum, can, tokluk, XP, etkiler), yüklü chunk'lardaki tüm bloklar
-(yer altı cevherleri dahil), ışık seviyeleri, varlıklar ve metadataları, zaman ve hava durumu,
-tarifler, blok/eşya/varlık veri tabloları, sunucunun gönderdiği tüm ham paketler.
+API doğruluğu, protokol uyumluluğu, kararlı olay/yaşam döngüsü, mevcut eklentilerin çalışması ve tekrarlanabilir test/build sonuçları temel ölçütlerdir. Sıradaki işler API açıklarının kapatılması, regresyonların giderilmesi ve gerçek 26.3 sunucusunda doğrulamadır.
 
-**Göremez:** dünya tohumu, yapıların yerleri, yüklenme mesafesinin ötesi, diğer oyuncuların
-envanteri, kapalı sandıkların içeriği, mobların hedefi.
+Test/probe scriptleri kütüphaneyi doğrulayan geliştirme araçlarıdır; otonom uygulamanın başlangıcı olarak değerlendirilmez. Önceki bağlantı/eylem testleri ile son API değişikliklerinin canlı doğrulaması ayrı tutulur.
 
-**Bilinen hata:** blok biyomu 26.3'te boş dönüyor, düzeltilmesi gerekiyor.
-
-## Gerçekçi beklentiler
-
-- Veri okuma çalışıyor. Zor olan yapma kısmı: her beceri tek tek yazılıp test edilecek.
-- Erken zincir (odun, taş, demir) birkaç günlük iş.
-- Nether, kale bulma, ender pearl toplama ve ejderha dövüşü asıl zor kısım. Tam otonom ve
-  güvenilir bir bitiriş haftalar sürer. İlk sürümlerde çoğu run ölümle biter.
-- Ejderhanın öldürüleceği garanti edilmiyor. Hedef, her run'da bir öncekinden ileri gitmek.
-
-## Durum (13 Kasım 2026)
-
-- **Bitti:** 26.3 yığını kuruldu ve gerçek sunucuda doğrulandı (bağlantı testi 11/11,
-  eylem testi 7/7: kazma, eşya toplama, blok koyma, yol bulma).
-- **Yok:** beyin katmanlarının hiçbiri henüz yazılmadı.
-- **Sıradaki adımlar:** gözlem katmanı ve biyom hatasının düzeltilmesi, sonra tehlike
-  tarayıcısı ve ilk beceri (odun toplama).
+- [API kapsamı ve build](api-kapsami-26.3.md)
+- [İlk API düzeltmeleri](api-26.3.md)

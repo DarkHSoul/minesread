@@ -11,6 +11,8 @@ import { ChatMessage } from 'prismarine-chat'
 import { world } from 'prismarine-world'
 import { Registry } from 'prismarine-registry'
 import { IndexedData } from 'minecraft-data'
+import { DragonPhase, EntityState, EntityPart, ExplosionEstimateOptions, ExplosionEstimate, ServerRecipeEntry, ServerRecipeState, AdvancementState } from './lib/observation_types'
+export { DragonPhase, EntityState, EntityPart, ExplosionEstimateOptions, ExplosionEstimate, ServerRecipeEntry, ServerRecipeState, AdvancementState } from './lib/observation_types'
 
 export function createBot (options: { client: Client } & Partial<BotOptions>): Bot
 export function createBot (options: BotOptions): Bot
@@ -44,6 +46,20 @@ export interface PluginOptions {
 }
 
 export type Plugin = (bot: Bot, options: BotOptions) => void
+
+export interface EntityDamage {
+  entityId: number
+  entity: Entity | undefined
+  sourceTypeId: number
+  /** Namespaced damage type from this connection's registry, if known. */
+  sourceType: string | undefined
+  /** Actual entity IDs (wire ID + 1 encoding removed), or null. */
+  sourceCauseId: number | null
+  sourceDirectId: number | null
+  sourceCause: Entity | undefined
+  sourceDirect: Entity | undefined
+  sourcePosition: Vec3 | null
+}
 
 export interface BotEvents {
   chat: (
@@ -82,7 +98,24 @@ export interface BotEvents {
   breath: () => Promise<void> | void
   abilities: (abilities: Abilities) => Promise<void> | void
   entitySwingArm: (entity: Entity) => Promise<void> | void
-  entityHurt: (entity: Entity, source: Entity) => Promise<void> | void
+  entityHurt: (entity: Entity | undefined, source?: Entity) => Promise<void> | void
+  entityDamage: (damage: EntityDamage) => Promise<void> | void
+  entityStateUpdate: (entity: Entity, state: EntityState, previous: EntityState | undefined) => Promise<void> | void
+  entityPartsUpdate: (entity: Entity, parts: EntityPart[]) => Promise<void> | void
+  serverRecipesUpdated: (packet: unknown) => Promise<void> | void
+  serverRecipeAdded: (entry: ServerRecipeEntry) => Promise<void> | void
+  serverRecipeRemoved: (displayId: number, entry: ServerRecipeEntry) => Promise<void> | void
+  serverRecipeNotification: (entry: ServerRecipeEntry) => Promise<void> | void
+  recipeBookSettings: (settings: Record<string, unknown>) => Promise<void> | void
+  advancementsUpdated: (packet: unknown) => Promise<void> | void
+  advancementUpdate: (state: AdvancementState, previousCompleted: boolean | null) => Promise<void> | void
+  advancementCompleted: (state: AdvancementState) => Promise<void> | void
+  advancementRemoved: (id: string, state: AdvancementState) => Promise<void> | void
+  advancementsReset: () => Promise<void> | void
+  itemCooldown: (group: string, ticks: number) => Promise<void> | void
+  itemCooldownEnd: (group: string) => Promise<void> | void
+  chunkBiomesUpdate: (columnCorner: Vec3) => Promise<void> | void
+  clientTick: () => Promise<void> | void
   entityDead: (entity: Entity) => Promise<void> | void
   entityTaming: (entity: Entity) => Promise<void> | void
   entityTamed: (entity: Entity) => Promise<void> | void
@@ -183,6 +216,23 @@ export interface Bot extends TypedEmitter<BotEvents> {
   version: string
   entity: Entity
   entities: { [id: string]: Entity }
+  entityParts: Map<number, EntityPart[]>
+  getEntityMetadata(entity: Entity | number): Record<string, unknown> | undefined
+  getEntityState(entity: Entity | number): EntityState | undefined
+  getDragonPhase(entity: Entity | number): DragonPhase | undefined
+  getEntityParts(entity: Entity | number): EntityPart[]
+  getAttackStrengthDelay(): number | null
+  getAttackStrengthScale(partialTick?: number): number | null
+  getItemSwapScale(partialTick?: number): number | null
+  getAttackCooldownTicks(): number | null
+  getExplosionDamageEstimate(target: Entity, source: Vec3, power: number, options?: ExplosionEstimateOptions): ExplosionEstimate
+  serverRecipes: ServerRecipeState
+  getServerRecipe(displayId: number): ServerRecipeEntry | null
+  getServerRecipes(): ServerRecipeEntry[]
+  advancements: Map<string, AdvancementState>
+  getAdvancement(id: string): AdvancementState | null
+  getAdvancements(): AdvancementState[]
+  isAdvancementDone(id: string): boolean | null
   fireworkRocketDuration: number
   spawnPoint: Vec3
   game: GameState
@@ -214,6 +264,10 @@ export interface Bot extends TypedEmitter<BotEvents> {
   world: world.WorldSync
   _client: Client
   heldItem: Item | null
+  /** Cooldown group or legacy item:<id> key; null for an absent item. */
+  getItemCooldownGroup(item: Item | string | number | null): string | null
+  /** Remaining client ticks; pass a group identifier or an Item with its components. */
+  getItemCooldown(item: Item | string | number | null): number
   usingHeldItem: boolean
   currentWindow: Window | null
   simpleClick: simpleClick
@@ -346,7 +400,7 @@ export interface Bot extends TypedEmitter<BotEvents> {
 
   useOn: (targetEntity: Entity) => void
 
-  attack: (entity: Entity) => void
+  attack: (entity: Entity | EntityPart, swing?: boolean) => void
 
   swingArm: (hand: 'left' | 'right' | undefined, showHand?: boolean) => void
 
@@ -430,6 +484,8 @@ export interface Bot extends TypedEmitter<BotEvents> {
   waitForChunksToLoad: () => Promise<void>
 
   entityAtCursor: (maxDistance?: number) => Entity | null
+  /** Uses reconstructed, explicitly approximate dragon hitboxes. */
+  entityPartAtCursor: (maxDistance?: number) => EntityPart | null
   nearestEntity: (filter?: (entity: Entity) => boolean) => Entity | null
 
   waitForTicks: (ticks: number) => Promise<void>
