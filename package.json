@@ -1,0 +1,24 @@
+{
+  "name": "minesread",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minecraft world-reading, rule-driven bot",
+  "type": "commonjs",
+  "scripts": {
+    "setup:data": "node scripts/setup-data.js",
+    "check": "node scripts/check-versions.js",
+    "server:setup": "node scripts/server-setup.js",
+    "server": "node scripts/run-server.js",
+    "smoke": "node scripts/smoke.js"
+  },
+  "dependencies": {
+    "mineflayer": "github:suisarbre/mineflayer#ad4af12611fd55309bb387b2b416212bffb0eddf",
+    "minecraft-data": "3.119.0",
+    "minecraft-protocol": "github:suisarbre/node-minecraft-protocol#3473413d32ee09af55aa77579000391be3bb9753",
+    "mineflayer-pathfinder": "2.4.5"
+  },
+  "overrides": {
+    "minecraft-data": "$minecraft-data",
+    "minecraft-protocol": "$minecraft-protocol"
+  }
+}
